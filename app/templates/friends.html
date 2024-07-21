@@ -1,0 +1,251 @@
+{% extends 'index.html' %}
+{% block head %}
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Friends</title>
+    <link href="{{ url_for('static', filename='images/icons/facebook.ico')}}" rel="shortcut icon" type="image/x-icon" />
+    <link href="{{ url_for('static', filename='css/style.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/friends.css')}}" rel="stylesheet" />
+
+</head>
+{% endblock %}
+
+
+
+
+{% block body %}
+<div class="left">
+    <div class="header1">
+
+        Friends
+
+
+
+        <div class="leftbox1">
+            <i class="settings-icon"></i>
+        </div>
+    </div>
+    <div class="leftbox2 activebox" id="friends-header">
+        <div class="leftbox3">
+            <div class="leftbox1">
+                <i class="settings-icon1"></i>
+            </div>
+
+            All Friends
+
+        </div>
+        <i class="settings-icon2"></i>
+    </div>
+    <div class="leftbox2" id="suggestions-header">
+        <div class="leftbox3">
+            <div class="leftbox1">
+                <i class="settings-icon1 icon2"></i>
+            </div>
+
+            Suggestions
+
+        </div>
+        <i class="settings-icon2"></i>
+    </div>
+    <div class="leftbox2" id="request-header">
+        <div class="leftbox3">
+            <div class="leftbox1">
+                <i class="settings-icon1 icon3"></i>
+            </div>
+
+            Friend Requests
+
+        </div>
+        <i class="settings-icon2"></i>
+    </div>
+</div>
+<div class="center" id="friends">
+    <div>
+        <div class="header2">
+
+            Friends
+
+        </div>
+    </div>
+    <div class="centerbox1">
+        {% for user in friends %}
+        <div class="centerbox2 card1">
+            <div class="centerbox3">
+                {% if user.profile_img %}
+                <img alt="" src="{{url_for('static', filename = 'images/uploads/'+ user.profile_img)}}" />
+                {% else %}
+                <img alt="" src="{{url_for('static', filename = 'images/blankpic.webp')}}" />
+                {% endif %}
+            </div>
+            <span>{{user.first_name}} {{user.last_name}}</span>
+            <span class="mutuals">10 mutual friends</span>
+            <a href="{{ url_for('removefriend', user_id=user.id)}}"><button class="delete">Remove</button></a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="center inactive" id="suggestions">
+    <div>
+        <div class="header2">
+
+            Suggestions
+
+        </div>
+    </div>
+    <div class="centerbox1">
+        {% for user in suggestions %}
+        <div class="centerbox2">
+            <div class="centerbox3">
+                {% if user.profile_img %}
+                <img alt="" src="{{url_for('static', filename = 'images/uploads/'+ user.profile_img)}}" />
+                {% else %}
+                <img alt="" src="{{url_for('static', filename = 'images/blankpic.webp')}}" />
+                {% endif %}
+            </div>
+            <span>{{user.first_name}} {{user.last_name}}</span>
+            <button class="confirm add-friend" onclick="addFriend({{user.id}})">Add Friend</button>
+            <button class="delete">Remove</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="center inactive" id="request">
+    <div>
+        <div class="header2">
+
+            Requests
+
+        </div>
+    </div>
+    <div class="centerbox1">
+        {% for user in requests %}
+        <div class="centerbox2">
+            <div class="centerbox3">
+                {% if user.profile_img %}
+                <img alt="" src="{{url_for('static', filename = 'images/uploads/'+ user.profile_img)}}" />
+                {% else %}
+                <img alt="" src="{{url_for('static', filename = 'images/blankpic.webp')}}" />
+                {% endif %}
+            </div>
+            <span>{{user.first_name}} {{user.last_name}}</span>
+            <button class="confirm" onclick="acceptFriend({{user.id}})">Confirm</button>
+            <button class="delete">Delete</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% for message in get_flashed_messages() %}
+<div class="flash_msg">
+    {{message}}
+
+</div>
+{% endfor %}
+
+{% endblock body %}
+
+
+{% block script %}
+<script>
+
+    const friendsHeader = document.getElementById('friends-header')
+
+    const suggestionsHeader = document.getElementById('suggestions-header')
+
+    const friends = document.getElementById('friends')
+
+    const suggestions = document.getElementById('suggestions')
+
+    const request = document.getElementById('request')
+
+    const requestHeader = document.getElementById('request-header')
+
+
+    friendsHeader.addEventListener('click', () => {
+
+        friendsHeader.classList.add('activebox')
+
+        suggestionsHeader.classList.remove('activebox')
+
+        friends.classList.remove('inactive')
+
+        suggestions.classList.add('inactive')
+
+        requestHeader.classList.remove('activebox')
+
+        request.classList.add('inactive')
+
+    })
+
+    suggestionsHeader.addEventListener('click', () => {
+
+        suggestionsHeader.classList.add('activebox')
+
+        friendsHeader.classList.remove('activebox')
+
+        friends.classList.add('inactive')
+
+        suggestions.classList.remove('inactive')
+
+        requestHeader.classList.remove('activebox')
+
+        request.classList.add('inactive')
+
+    })
+
+    requestHeader.addEventListener('click', () => {
+
+        requestHeader.classList.add('activebox')
+
+        friendsHeader.classList.remove('activebox')
+
+        friends.classList.add('inactive')
+
+        suggestions.classList.add('inactive')
+
+        suggestionsHeader.classList.remove('activebox')
+
+        request.classList.remove('inactive')
+
+    })
+
+
+   
+
+    function addFriend(id) {
+        window.location.href = {{ url_for('addfriend', user_id = id) | tojson }} + `/${id}`;
+        }
+
+    function acceptFriend(id) {
+        window.location.href = {{ url_for('acceptfriend', user_id = id) | tojson }} + `/${id}`;
+        }
+
+    
+    const logo = document.getElementById('logo')
+    var homeRoute = {{ url_for('index')|tojson }};
+
+    logo.addEventListener('click', () => {
+            window.location.href = homeRoute
+        })
+
+
+    const pic = document.getElementById('pic-button')
+    const leave = document.getElementById('leave')
+    var logoutRoute = {{ url_for('login') | tojson }};
+
+    pic.addEventListener('click', () => {
+        leave.classList.toggle('show3')
+    })
+    leave.addEventListener('click', () => {
+        window.location.href = logoutRoute
+    })
+
+
+
+
+
+</script>
+{% endblock script %}

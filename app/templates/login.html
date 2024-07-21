@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="{{ url_for('static', filename='images/icons/facebook.ico')}}" rel="shortcut icon" type="image/x-icon" />
+    <link href="{{ url_for('static', filename='css/login.css')}}" rel="stylesheet" />
+    <title>Login</title>
+
+</head>
+
+<body>
+    <div class="logo">
+        <img alt="" src="{{url_for('static', filename = 'images/facebook-long.svg')}}" />
+        <h2 class="h2">Facebook helps you connect and share with the people in your life.</h2>
+    </div>
+    <div class="form">
+        <form class="form1" action="{{ url_for('login')}}" method="post">
+            <div class="input_1">
+                <input id="email" name="email" placeholder="Email address or phone number" type="text" required />
+                <input id="password" name="password" placeholder="Password" type="password" required minlength="6" />
+                <button class="login">Log in</button>
+                <div class="bottom">
+                    <div class="fpword-container">
+                        <a class="fpword" id="fpword">Forgotten password?</a>
+                    </div>
+                </div>
+                <button class="create" id="create" type="button">Create new account</button>
+            </div>
+        </form>
+    </div>
+    <div class="modal" id="modal">
+        <div class="modal-cont">
+            <div class="reg-form">
+                <div class="regbox1">
+                    <img alt="" class="close-icon" id="close-icon"
+                        src="{{url_for('static', filename = 'images/icons/closeIcon.png')}}" />
+                    <div class="modtext1">Sign Up</div>
+                    <div class="modtext2">It's quick and easy.</div>
+                </div>
+                <div class="error1" id="error2">
+                  User email already exists
+                </div>
+                <form action="{{ url_for('registration')}}" method="post" class="form2">
+                    <div class="input_2">
+                        <div class="modbox1">
+                            <input class="type1" id="firstname" name="first_name" placeholder="First name" type="text"
+                                required />
+                            <input class="type1" id="lastname" name="last_name" placeholder="Surname" type="text"
+                                required />
+                        </div>
+                        <input class="type2" id="email" name="email" placeholder="Email address" type="email"
+                            required />
+                        <input class="type2" id="password" name="password" placeholder="New password" type="password"
+                            required />
+                        <div>
+                            <label class="label1" for="age">Age
+
+                                <i class="questionIcon"></i>
+                            </label>
+                            <input class="age" id="age" name="age" type="number" required />
+                        </div>
+                        <div>
+                            <label class="label1" for="gender">Gender
+
+                                <i class="questionIcon"></i>
+                            </label>
+                            <div class="modbox2">
+                                <div class="radio">
+                                    <label for="male">Male</label>
+                                    <input id="male" name="gender" type="radio" value="male" required/>
+                                </div>
+                                <div class="radio">
+                                    <label for="female">Female</label>
+                                    <input id="female" name="gender" type="radio" value="female" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modbox3">
+                            <button class="button1">Sign Up</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="modal2">
+        <div class="modal-cont">
+            <div class="reg-form">
+                <div class="regbox1">
+                    <img alt="" class="close-icon" id="close-icon2"
+                        src="{{url_for('static', filename = 'images/icons/closeIcon.png')}}" />
+                    <div class="modtext1">Set Password</div>
+                    <div class="modtext2">Get a new password.</div>
+                </div>
+                <div class="error1" id="error1">
+                    Confirm password doesn't match new password
+                </div>
+                <form class="form2" action="{{ url_for('forgot')}}" method="post" id="form3">
+                    <div class="input_2">
+                        <input class="type2" id="email" name="email" placeholder="Mobile number or email address"
+                            type="email" required />
+                        <input class="type2" id="password2" name="password" placeholder="New password" type="password"
+                            required minlength="6" />
+                        <input class="type2" id="cpassword2" name="cpassword" placeholder="Confirm password"
+                            type="password" required minlength="6" />
+                        <div class="modbox3">
+                            <button class="button1">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+   
+        {% for message in get_flashed_messages() %}
+        <div class="flash_msg">
+            {{message}}
+
+        </div>
+        {% endfor %}
+
+    <script>
+
+        const page = new URLSearchParams(window.location.search).get('page');
+        const error = new URLSearchParams(window.location.search).get('error');
+
+
+        const create = document.getElementById('create')
+
+        const fpword = document.getElementById('fpword')
+
+        const modal = document.getElementById('modal')
+
+        const modal2 = document.getElementById('modal2')
+
+        const closeIcon = document.getElementById('close-icon')
+        const closeIcon2 = document.getElementById('close-icon2')
+
+        const password2 = document.getElementById('password2')
+
+        const cpassword2 = document.getElementById('cpassword2')
+
+        const error1 = document.getElementById('error1')
+        const error2 = document.getElementById('error2')
+
+
+        const form3 = document.getElementById('form3')
+
+        form3.addEventListener('submit', (e) => {
+            if (password2.value != cpassword2.value) {
+                e.preventDefault()
+                error1.classList.add('showerror')
+            } else {
+                error1.classList.remove('showerror')
+            }
+        })
+
+        if (page == '2') {
+            modal2.classList.add('show')
+        }
+        if (page == '1') {
+            modal.classList.add('show')
+        }
+        
+        if (error == 'type2') {
+            error2.classList.add('showerror')
+        }
+        else {
+            error2.classList.remove('showerror')
+        }
+
+        create.addEventListener('click', () => {
+
+            modal.classList.add('show')
+
+        })
+
+        closeIcon.addEventListener('click', () => {
+
+            modal.classList.remove('show')
+
+        })
+
+        fpword.addEventListener('click', () => {
+
+            modal2.classList.add('show')
+
+        })
+
+        closeIcon2.addEventListener('click', () => {
+
+            modal2.classList.remove('show')
+
+        })
+
+
+
+    </script>
+</body>
+
+</html>
