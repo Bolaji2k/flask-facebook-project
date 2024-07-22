@@ -2,7 +2,7 @@ from flask import render_template, request, session, send_from_directory
 from flask import make_response
 from flask import url_for, flash
 from flask import redirect
-from ..models.models import User, Group, Image, Chat, db
+from models.models import User, Group, Image, Chat, db
 from werkzeug.security import generate_password_hash
 import os
 import imghdr

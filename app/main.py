@@ -1,9 +1,9 @@
 import os
 from flask import Flask
 from flask_migrate import Migrate
-from .models.models import db
-from .views.views import create_view
-from  .admins.admin import admin
+from models.models import db
+from views.views import create_view
+from  admins.admin import admin
 from flask_socketio import SocketIO
 
 
